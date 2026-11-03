@@ -41,7 +41,7 @@ class Animal:
 
     def __init__(self, name):
         # TODO : Créez l'attribut self.name avec le paramètre name
-        pass
+        self.name = name
 
     def sound(self):
         """
@@ -70,7 +70,8 @@ class Dog(Animal):
     """
 
     # TODO : Redéfinissez la méthode sound() pour retourner "Woof"
-    pass
+    def sound(self):
+        return "Woof"
 
 
 class Cat(Animal):
@@ -80,7 +81,13 @@ class Cat(Animal):
     """
 
     # TODO : Redéfinissez la méthode sound() pour retourner "Meow"
-    pass
+    def sound(self):
+        return "Meow"
+
+
+
+
+#Q1. La commande Dog("Rex").describe() affiche bien "Woof" car Dog a hérité de la méthode describe() et la méthode sound() de Dog est prioritaire à la méthode sound() de la mère.
 
 
 class Bird(Animal):
@@ -99,13 +106,35 @@ class Bird(Animal):
 
     def __init__(self, name, can_fly=True):
         # TODO : Appelez super().__init__(name) puis stockez can_fly
-        pass
+        super().__init__(name)
+        self.can_fly=can_fly
 
     # TODO : Redéfinissez sound() pour retourner "Tweet"
-    pass
+    def sound(self):
+        return "Tweet"
 
     # TODO : Redéfinissez describe() pour compléter celle du parent
-    pass
+    def describe(self):
+        text = super().describe()
+        if self.can_fly:
+            return f"{text} and flies"
+        else:
+            return f"{text}"
+
+
+
+
+# pour tester
+
+try:
+    assert Bird("Tweety").describe() == "Tweety says Tweet and flies"
+    assert Bird("Pingu", can_fly=False).describe() == "Pingu says Tweet"
+    assert Bird("Tweety").name == "Tweety"
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
 
 
 # =============================================================================
@@ -157,13 +186,20 @@ class TestAnimals(unittest.TestCase):
     """
 
     # TODO : Écrivez le test pour Dog
-    pass
+    def test_dog(self):
+        obtenu = Dog("Rex").describe()
+        self.assertEqual("Rex says Woof", obtenu)
 
     # TODO : Écrivez le test pour Bird qui ne vole pas
-    pass
+    def test_bird_no_fly(self):
+        obtenu = Bird("Pingu", can_fly=False).describe()
+        self.assertEqual("Pingu says Tweet", obtenu)
 
     # TODO : Écrivez le test pour Dog sans nom (doit lever TypeError)
-    pass
+    def test_dog_needs_name(self):
+        with self.assertRaises(TypeError):
+            Dog()
+
 
 
 class Greeter:
@@ -197,15 +233,30 @@ class ScriptedCli:
 
     def __init__(self, answers):
         # TODO : Stockez les réponses et initialisez displayed
-        pass
+        self.answers = answers
+        self.displayed = []
 
     def display(self, message):
         # TODO : Ajoutez le message à displayed
-        pass
+        self.displayed.append(message)
 
     def prompt(self, message):
         # TODO : Ajoutez le message à displayed et retournez la première réponse
-        pass
+        self.displayed.append(message)
+        return self.answers.pop(0)
+
+# pour tester
+
+try:
+    cli = ScriptedCli(["Ada"])
+    Greeter(cli).play()
+    assert cli.displayed == ["What is your name?", "Hello Ada!"], cli.displayed
+except Exception as e:
+    print("OOPS - Something's wrong")
+    print(f"Error message : {e}")
+else:
+    print('Congrats ! Your implementation works !')
+
 
 
 # =============================================================================
